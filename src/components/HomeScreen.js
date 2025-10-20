@@ -19,6 +19,12 @@ export default function HomeScreen({ navigation }) {
           title="Go to Pulseira"
           onPress={() => navigation.navigate('Pulseira')}
         />
+         </View>
+      <View style={styles.buttonContainer}>
+        <Button
+          title="Go to Pulseira"
+          onPress={() => navigation.navigate('Pulseira')}
+        />
       </View>
     </View>
   );
