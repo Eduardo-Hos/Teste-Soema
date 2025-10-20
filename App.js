@@ -1,10 +1,11 @@
  import * as React from 'react';
  import { NavigationContainer } from '@react-navigation/native';
  import { createStackNavigator } from '@react-navigation/stack';
- import HomeScreen from './src/components/HomeScreen';
  import LoginScreen from './src/components/LoginScreen';
+ import HomeScreen from './src/components/HomeScreen';
  import PulseiraScreen from './src/components/PulseiraScreen';
  import InfoScreen from './src/components/InfoScreen';
+ import NoteScreen from './src/components/NoteScreen';
  
  
  const Stack = createStackNavigator();
@@ -17,6 +18,7 @@
          <Stack.Screen name="Login" component={LoginScreen} />
          <Stack.Screen name="Pulseira" component={PulseiraScreen} />
          <Stack.Screen name="Info" component={InfoScreen} />
+         <Stack.Screen name="Note" component={NoteScreen} />
        </Stack.Navigator>
      </NavigationContainer>
    );
