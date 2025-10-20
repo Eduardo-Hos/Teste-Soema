@@ -16,8 +16,8 @@ export default function HomeScreen({ navigation }) {
       </View>
       <View style={styles.buttonContainer}>
         <Button
-          title="Go to Profile"
-          onPress={() => navigation.navigate('Profile')}
+          title="Go to Pulseira"
+          onPress={() => navigation.navigate('Pulseira')}
         />
       </View>
     </View>
