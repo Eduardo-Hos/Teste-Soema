@@ -1,13 +1,13 @@
-
+// Primeiro bloco de código
 import React from 'react';
 import { View, Text, Button, StyleSheet, Dimensions } from 'react-native';
 
 const windowWidth = Dimensions.get('window').width;
 
-export default function HomeScreen({ navigation }) {
+export default function InfoScreen({ navigation }) {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Home Screen</Text>
+      <Text style={styles.title}>Info Screen</Text>
       <View style={styles.buttonContainer}>
         <Button
           title="Go to Login"
@@ -24,6 +24,7 @@ export default function HomeScreen({ navigation }) {
   );
 }
 
+// Segundo bloco de código
 const styles = StyleSheet.create({
   container: {
     flex: 1,
