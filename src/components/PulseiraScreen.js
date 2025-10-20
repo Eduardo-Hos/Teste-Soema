@@ -3,10 +3,10 @@ import React from 'react';
 
  const windowWidth = Dimensions.get('window').width;
 
- export default function ProfileScreen({ navigation }) {
+ export default function PulseiraScreen({ navigation }) {
    return (
      <View style={styles.container}>
-       <Text style={styles.title}>Profile Screen</Text>
+       <Text style={styles.title}>Pulseira Screen</Text>
       <View style={styles.buttonContainer}>
         <Button
           title="Go to Home"
@@ -15,8 +15,8 @@ import React from 'react';
       </View>
       <View style={styles.buttonContainer}>
         <Button
-          title="Go to Details"
-          onPress={() => navigation.navigate('Details')}
+          title="Go to Login"
+          onPress={() => navigation.navigate('Login')}
         />
       </View>
     </View>

@@ -3,10 +3,10 @@ import { View, Text, Button, StyleSheet, Dimensions } from 'react-native';
 
 const windowWidth = Dimensions.get('window').width;
 
-export default function DetailsScreen({ navigation }) {
+export default function LoginScreen({ navigation }) {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Details Screen</Text>
+      <Text style={styles.title}>Login Screen</Text>
       <View style={styles.buttonContainer}>
         <Button
           title="Go to Home"
