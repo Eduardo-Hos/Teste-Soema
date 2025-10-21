@@ -21,9 +21,10 @@ export default function LoginScreen({ navigation }) {
       {/* Logo */}
       <View style={styles.logoBox}>
        <Image
-  source={require('./img/logosoema.png')}
-  style={styles.logo}
-/> </View>
+        source={require('./img/logosoema.png')}
+        style={styles.logo}
+      />
+      </View>
 
       <Text style={styles.title}>Login</Text>
 
