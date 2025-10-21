@@ -22,7 +22,7 @@ export default function HomeScreen({ navigation }) {
         <View style={styles.topRow}>
           <Ionicons name="menu" size={28} color="black" />
           <TextInput style={styles.search} placeholder="O que você precisa?" />
-          <TouchableOpacity style={styles.loginContainer}>
+          <TouchableOpacity style={styles.loginContainer} onPress={() => navigation.navigate("Login")}>
             <Ionicons name="person-outline" size={22} color="black" />
             <Text style={styles.loginText}>Usuário</Text>
           </TouchableOpacity>
@@ -82,8 +82,7 @@ export default function HomeScreen({ navigation }) {
         </Text>
         <Text style={styles.subtitle}>
           A utilização de nosso site terá como benefício uma melhor organização
-          e um auxílio a mais para ajudar famílias com filhos autistas,
-          principalmente grau 3.
+          e um auxílio a mais para ajudar famílias com filhos autistas.
         </Text>
       </View>
 
@@ -292,12 +291,14 @@ const styles = StyleSheet.create({
     fontSize: 15,
     marginBottom: 8,
      textAlign: "justify",
+      marginHorizontal: 20,
   },
   subtitle: {
     textAlign: "center",
     fontSize: 13,
     color: "#444",
      textAlign: "justify",
+     marginHorizontal: 20,
   },
   cardsContainer: {
     alignItems: "center",
