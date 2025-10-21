@@ -39,11 +39,12 @@ export default function HomeScreen({ navigation }) {
             style={styles.sensorButton}
             onPress={() => navigation.navigate("Pulseira")}
           >
+             <Text style={styles.sensorText}>Pulseira</Text>
             <Image
               source={require("./img/pulseira.png")}
               style={styles.sensorImg}
             />
-            <Text style={styles.sensorText}>Pulseira</Text>
+           
           </TouchableOpacity>
         </View>
       </View>
@@ -213,9 +214,9 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
   },
   sensorImg: {
-    width: 30,
+    width: 38,
     height: 30,
-    marginRight: 6,
+    marginLeft: 6,
   },
   sensorText: {
     color: "#0028A5",
