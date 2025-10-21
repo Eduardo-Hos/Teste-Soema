@@ -31,26 +31,48 @@ export default function HomeScreen({ navigation }) {
         {/* Linha de baixo */}
         <View style={styles.bottomRow}>
           <Image source={require("./img/logosoema.png")} style={styles.logo} />
-          <Image source={require("./img/autismo.png")} style={styles.autismoImg} />
+          <Image
+            source={require("./img/autismo.png")}
+            style={styles.autismoImg}
+          />
           <TouchableOpacity
             style={styles.sensorButton}
             onPress={() => navigation.navigate("Pulseira")}
           >
-            <Image source={require("./img/pulseira.png")} style={styles.sensorImg} />
+            <Image
+              source={require("./img/pulseira.png")}
+              style={styles.sensorImg}
+            />
             <Text style={styles.sensorText}>Pulseira</Text>
           </TouchableOpacity>
         </View>
       </View>
 
-      {/* Coração / faixa */}
-      <View style={styles.topDecoration}>
-        <Image source={require("./img/coracao.png")} style={styles.heart} />
-      </View>
+      {/* BANNER */}
+      <View style={styles.bannerContainer}>
+        <Image
+          source={require("./img/banner.png")}
+          style={styles.bannerImage}
+        />
 
-      {/* Botão COMEÇAR AGORA */}
-      <TouchableOpacity style={styles.mainButton}>
-        <Text style={styles.mainButtonText}>COMEÇAR AGORA</Text>
-      </TouchableOpacity>
+        <View style={styles.bannerContent}>
+          <View style={styles.bannerTextArea}>
+            <Text style={styles.bannerText}>
+              Comece agora a utilizar nosso ótimo site especializado em auxiliar
+              famílias com filhos portadores de TEA
+            </Text>
+
+            <TouchableOpacity style={styles.bannerButton}>
+              <Text style={styles.bannerButtonText}>COMEÇAR AGORA</Text>
+            </TouchableOpacity>
+          </View>
+
+          <Image
+            source={require("./img/coracao.png")}
+            style={styles.heartBanner}
+          />
+        </View>
+      </View>
 
       {/* Textos explicativos */}
       <View style={styles.textSection}>
@@ -69,7 +91,10 @@ export default function HomeScreen({ navigation }) {
       <View style={styles.cardsContainer}>
         {/* PULSEIRA */}
         <View style={styles.card}>
-          <Image source={require("./img/pulseira.png")} style={styles.cardImage} />
+          <Image
+            source={require("./img/pulseira.png")}
+            style={styles.cardImage}
+          />
           <Text style={styles.cardTitle}>PULSEIRA</Text>
           <Text style={styles.cardText}>
             A partir do exame foi diagnosticado TEA, e a pulseira auxilia na
@@ -85,7 +110,10 @@ export default function HomeScreen({ navigation }) {
 
         {/* NOTAS / AGENDA */}
         <View style={styles.card}>
-          <Image source={require("./img/caderno.png")} style={styles.cardImage} />
+          <Image
+            source={require("./img/caderno.png")}
+            style={styles.cardImage}
+          />
           <Text style={styles.cardTitle}>NOTAS/AGENDA</Text>
           <Text style={styles.cardText}>
             Uma forma organizada de anotar atividades, consultas e informações
@@ -101,7 +129,10 @@ export default function HomeScreen({ navigation }) {
 
         {/* INFORMAÇÕES */}
         <View style={styles.card}>
-          <Image source={require("./img/puzzle.png")} style={styles.cardImage} />
+          <Image
+            source={require("./img/puzzle.png")}
+            style={styles.cardImage}
+          />
           <Text style={styles.cardTitle}>INFORMAÇÕES</Text>
           <Text style={styles.cardText}>
             Você saberá tudo que está incluso nesta ferramenta, com dicas e
@@ -191,47 +222,83 @@ const styles = StyleSheet.create({
     color: "#0028A5",
   },
 
-  /** RESTO DA TELA **/
-  topDecoration: {
+  /** BANNER **/
+  bannerContainer: {
+    position: "relative",
+    width: "100%",
     alignItems: "center",
-    marginBottom: 15,
-    marginTop: 10,
+    marginTop: 0,
   },
-  heart: {
-    width: 60,
-    height: 60,
+  bannerImage: {
+    width: "100%",
+    height: 140,
+    resizeMode: "cover",
+  },
+  bannerContent: {
+    position: "absolute",
+    top: 40,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingHorizontal: 20,
+  },
+  bannerTextArea: {
+    flex: 1,
+    paddingRight: 10,
+  },
+  bannerText: {
+    color: "#000",
+    fontSize: 11,
+    fontWeight: "50",
+    textAlign: "justify",
+    marginTop: 10,
+    marginBottom: 10,
+    marginLeft: 20,
+    marginRight: 20,
+  },
+  bannerButton: {
+    backgroundColor: "#4B2EFF",
+    height: 25,
+    borderRadius: 10,
+    paddingHorizontal: 3,
+    paddingVertical: 3,
+    alignSelf: "flex-start",
+    marginLeft: 40,
+    marginBottom: 20,
+  },
+  bannerButtonText: {
+    color: "#fff",
+    fontWeight: "600",
+    fontSize: 12,
+  },
+  heartBanner: {
+    width: 80,
+    height: 80,
     resizeMode: "contain",
   },
 
-  mainButton: {
-    backgroundColor: "#1e50ff",
-    borderRadius: 10,
-    paddingVertical: 12,
-    marginHorizontal: 40,
-    alignItems: "center",
-    marginBottom: 20,
-  },
-  mainButtonText: {
-    color: "#fff",
-    fontWeight: "700",
-  },
-
+  /** TEXTOS E CARDS **/
   textSection: {
     paddingHorizontal: 25,
-    marginBottom: 25,
+    marginVertical: 25,
+      textAlign: "justify",
   },
   title: {
     textAlign: "center",
     fontWeight: "600",
     fontSize: 15,
     marginBottom: 8,
+     textAlign: "justify",
   },
   subtitle: {
     textAlign: "center",
     fontSize: 13,
     color: "#444",
+     textAlign: "justify",
   },
-
   cardsContainer: {
     alignItems: "center",
     marginBottom: 40,
@@ -266,6 +333,8 @@ const styles = StyleSheet.create({
     color: "#444",
     fontSize: 13,
     marginBottom: 12,
+    textAlign: "justify",
+    marginHorizontal: 25,
   },
   cardButton: {
     backgroundColor: "#1e50ff",
