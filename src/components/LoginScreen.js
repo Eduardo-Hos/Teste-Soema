@@ -45,9 +45,6 @@ export default function LoginScreen({ navigation }) {
           secureTextEntry
           placeholderTextColor="#b0b0b0"
         />
-        <TouchableOpacity>
-          <Text style={styles.eyeIcon}>👁️</Text>
-        </TouchableOpacity>
       </View>
 
       {/* Opções de lembrar/esquecer senha */}

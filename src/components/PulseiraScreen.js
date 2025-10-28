@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -11,13 +11,23 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 
 export default function PulseiraScreen({ navigation }) {
-  const [bpm, setBpm] = useState(120); // depois você liga isso com a pulseira real
+  const [bpm, setBpm] = useState(120); // valor inicial do BPM
+
+  // Função que simula atualização do BPM
+  const atualizarDados = () => {
+    setBpm(Math.floor(Math.random() * 40 + 60)); // 60 a 100 bpm
+  };
+
+  // Atualização automática a cada 2 segundos
+  useEffect(() => {
+    const intervalo = setInterval(atualizarDados, 2000);
+    return () => clearInterval(intervalo);
+  }, []);
 
   return (
     <ScrollView style={styles.container}>
       {/* HEADER */}
       <View style={styles.header}>
-        {/* Linha de cima */}
         <View style={styles.topRow}>
           <Ionicons name="menu" size={28} color="black" />
           <TextInput style={styles.search} placeholder="O que você precisa?" />
@@ -30,7 +40,6 @@ export default function PulseiraScreen({ navigation }) {
           </TouchableOpacity>
         </View>
 
-        {/* Linha de baixo */}
         <View style={styles.bottomRow}>
           <Image
             source={require("./img/logosoema.png")}
@@ -41,12 +50,11 @@ export default function PulseiraScreen({ navigation }) {
             style={styles.autismoImg}
           />
           <TouchableOpacity style={styles.sensorButton}>
-             <Text style={styles.sensorText}>Pulseira</Text>
+            <Text style={styles.sensorText}>Pulseira</Text>
             <Image
               source={require("./img/pulseira.png")}
               style={styles.sensorImg}
             />
-            
           </TouchableOpacity>
         </View>
       </View>
@@ -68,10 +76,33 @@ export default function PulseiraScreen({ navigation }) {
         <View style={styles.alertContainer}>
           <Text style={styles.alertLabel}>Situação atual:</Text>
           <View style={styles.status}>
-            <View style={styles.alertDot} />
-            <Text style={styles.alertText}>Alerta!</Text>
+            <View
+              style={[
+                styles.alertDot,
+                {
+                  backgroundColor:
+                    bpm < 80
+                      ? "#00ff00"
+                      : bpm < 100
+                      ? "#ffff00"
+                      : bpm < 120
+                      ? "#800080"
+                      : "#ff0000",
+                },
+              ]}
+            />
+            <Text style={styles.alertText}>
+              {bpm < 80
+                ? "Estável"
+                : bpm < 100
+                ? "Moderado"
+                : bpm < 120
+                ? "Alerta"
+                : "Grave"}
+            </Text>
           </View>
         </View>
+
 
         <TouchableOpacity style={styles.button}>
           <Text style={styles.buttonText}>Histórico da pulseira</Text>
@@ -113,6 +144,7 @@ export default function PulseiraScreen({ navigation }) {
     </ScrollView>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {
@@ -285,7 +317,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#333",
     marginBottom: 8,
-     textAlign: "justify",
+    textAlign: "justify",
   },
   legenda: {
     marginVertical: 10,
