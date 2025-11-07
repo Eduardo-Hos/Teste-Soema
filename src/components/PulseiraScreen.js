@@ -12,10 +12,11 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { BleManager } from "react-native-ble-plx";
+import { Buffer } from "buffer"; // 👈 Import necessário para decodificar dados BLE
 
 export default function PulseiraScreen({ navigation }) {
   const [bpm, setBpm] = useState(75);
-  const manager = new BleManager.createClient();
+  const manager = new BleManager();
 
   useEffect(() => {
     async function requestPermissions() {
@@ -40,40 +41,42 @@ export default function PulseiraScreen({ navigation }) {
             return;
           }
 
-          // Procura dispositivos com nome começando com ESP32_Central
-          if (device?.name?.startsWith("ESP32_Central")) {
+          // Verifica se encontrou o ESP32
+          if (device?.name?.includes("ESP32_Hub")) {
             console.log("📡 Dispositivo encontrado:", device.name);
 
             manager.stopDeviceScan();
 
+            // Conecta ao dispositivo
             const connectedDevice = await device.connect();
             console.log("✅ Conectado a:", connectedDevice.name);
 
-            const discovered = await connectedDevice.discoverAllServicesAndCharacteristics();
+            // Descobre serviços e características
+            await connectedDevice.discoverAllServicesAndCharacteristics();
 
-            // UUIDs que você especificou
-            const SERVICE_UUID = "f90cd721-b6be-4739-9d90-57733908e767";
-            const CHARACTERISTIC_UUID = "26b0c2a1-e3f1-4ffb-a822-378d159b2ba8";
+            // UUIDs do ESP32
+            const SERVICE_UUID = "5bc28d32-1fb5-459e-8fcc-c5c9c331914b";
+            const CHARACTERISTIC_UUID = "abc5483e-36e1-4688-b7f5-ea07361b26a8";
 
-            const characteristic = await discovered.readCharacteristicForService(SERVICE_UUID, CHARACTERISTIC_UUID);
-            const data = Buffer.from(characteristic.value, "base64").toString("utf-8");
-
-            console.log("📊 BPM inicial:", data);
-            setBpm(parseInt(data) || 75);
-
-            // Habilitar notificações
-            discovered.monitorCharacteristicForService(
+            // Habilita notificações BLE
+            connectedDevice.monitorCharacteristicForService(
               SERVICE_UUID,
               CHARACTERISTIC_UUID,
-              (error, char) => {
+              (error, characteristic) => {
                 if (error) {
                   console.error("Erro de notificação:", error);
                   return;
                 }
-                if (char?.value) {
-                  const newData = Buffer.from(char.value, "base64").toString("utf-8");
-                  console.log("🔔 Notificação:", newData);
-                  setBpm(parseInt(newData) || 75);
+
+                if (characteristic?.value) {
+                  // Decodifica o valor recebido (base64 → texto)
+                  const newData = Buffer.from(
+                    characteristic.value,
+                    "base64"
+                  ).readUInt8(0); // 👈 Lê o valor como número (uint8_t)
+
+                  console.log("🔔 Notificação recebida:", newData);
+                  setBpm(newData || 75);
                 }
               }
             );
@@ -86,6 +89,7 @@ export default function PulseiraScreen({ navigation }) {
 
     connectBLE();
 
+    // Limpeza ao sair da tela
     return () => {
       console.log("🧹 Limpando conexão BLE...");
       manager.stopDeviceScan();
