@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "expo start",
-    "android": "expo run:android",
-    "ios": "expo run:ios",
-    "web": "expo start --web"
+    "start": "npx expo start",
+    "android": "npx react-native run-android",
+    "ios": "npx react-native run-ios",
+    "web": "npx expo start --web"
   },
   "dependencies": {
     "@react-native-community/cli": "latest",
