@@ -7,21 +7,94 @@ import {
   ScrollView,
   TextInput,
   StyleSheet,
+  PermissionsAndroid,
+  Platform,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { BleManager } from "react-native-ble-plx";
+import { Buffer } from "buffer"; // 👈 Import necessário para decodificar dados BLE
 
 export default function PulseiraScreen({ navigation }) {
-  const [bpm, setBpm] = useState(120); // valor inicial do BPM
+  const [bpm, setBpm] = useState(75);
+  const manager = new BleManager();
 
-  // Função que simula atualização do BPM
-  const atualizarDados = () => {
-    setBpm(Math.floor(Math.random() * 40 + 60)); // 60 a 100 bpm
-  };
-
-  // Atualização automática a cada 2 segundos
   useEffect(() => {
-    const intervalo = setInterval(atualizarDados, 2000);
-    return () => clearInterval(intervalo);
+    async function requestPermissions() {
+      if (Platform.OS === "android") {
+        await PermissionsAndroid.requestMultiple([
+          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+          PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN,
+          PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT,
+        ]);
+      }
+    }
+
+    async function connectBLE() {
+      try {
+        await requestPermissions();
+
+        console.log("🔍 Iniciando varredura BLE...");
+
+        manager.startDeviceScan(null, null, async (error, device) => {
+          if (error) {
+            console.error("Erro BLE:", error);
+            return;
+          }
+
+          // Verifica se encontrou o ESP32
+          if (device?.name?.includes("ESP32_Hub")) {
+            console.log("📡 Dispositivo encontrado:", device.name);
+
+            manager.stopDeviceScan();
+
+            // Conecta ao dispositivo
+            const connectedDevice = await device.connect();
+            console.log("✅ Conectado a:", connectedDevice.name);
+
+            // Descobre serviços e características
+            await connectedDevice.discoverAllServicesAndCharacteristics();
+
+            // UUIDs do ESP32
+            const SERVICE_UUID = "5bc28d32-1fb5-459e-8fcc-c5c9c331914b";
+            const CHARACTERISTIC_UUID = "abc5483e-36e1-4688-b7f5-ea07361b26a8";
+
+            // Habilita notificações BLE
+            connectedDevice.monitorCharacteristicForService(
+              SERVICE_UUID,
+              CHARACTERISTIC_UUID,
+              (error, characteristic) => {
+                if (error) {
+                  console.error("Erro de notificação:", error);
+                  return;
+                }
+
+                if (characteristic?.value) {
+                  // Decodifica o valor recebido (base64 → texto)
+                  const newData = Buffer.from(
+                    characteristic.value,
+                    "base64"
+                  ).readUInt8(0); // 👈 Lê o valor como número (uint8_t)
+
+                  console.log("🔔 Notificação recebida:", newData);
+                  setBpm(newData || 75);
+                }
+              }
+            );
+          }
+        });
+      } catch (error) {
+        console.error("Erro BLE:", error);
+      }
+    }
+
+    connectBLE();
+
+    // Limpeza ao sair da tela
+    return () => {
+      console.log("🧹 Limpando conexão BLE...");
+      manager.stopDeviceScan();
+      manager.destroy();
+    };
   }, []);
 
   return (
@@ -41,20 +114,11 @@ export default function PulseiraScreen({ navigation }) {
         </View>
 
         <View style={styles.bottomRow}>
-          <Image
-            source={require("./img/logosoema.png")}
-            style={styles.logo}
-          />
-          <Image
-            source={require("./img/autismo.png")}
-            style={styles.autismoImg}
-          />
+          <Image source={require("./img/logosoema.png")} style={styles.logo} />
+          <Image source={require("./img/autismo.png")} style={styles.autismoImg} />
           <TouchableOpacity style={styles.sensorButton}>
             <Text style={styles.sensorText}>Pulseira</Text>
-            <Image
-              source={require("./img/pulseira.png")}
-              style={styles.sensorImg}
-            />
+            <Image source={require("./img/pulseira.png")} style={styles.sensorImg} />
           </TouchableOpacity>
         </View>
       </View>
@@ -62,10 +126,7 @@ export default function PulseiraScreen({ navigation }) {
       {/* CARD PRINCIPAL */}
       <View style={styles.card}>
         <Text style={styles.pulseiraText}>Pulseira: 2</Text>
-        <Image
-          source={require("./img/pulseira.png")}
-          style={styles.image}
-        />
+        <Image source={require("./img/pulseira.png")} style={styles.image} />
 
         <Text style={styles.bpmLabel}>BPM:</Text>
         <View style={styles.bpmBox}>
@@ -103,7 +164,6 @@ export default function PulseiraScreen({ navigation }) {
           </View>
         </View>
 
-
         <TouchableOpacity style={styles.button}>
           <Text style={styles.buttonText}>Histórico da pulseira</Text>
         </TouchableOpacity>
@@ -128,9 +188,7 @@ export default function PulseiraScreen({ navigation }) {
 
         <View style={styles.legenda}>
           <Text style={styles.legendaItem}>🟢 VERDE = 60 ~ 80 → Estável</Text>
-          <Text style={styles.legendaItem}>
-            🟡 AMARELO = 80 ~ 100 → Moderado
-          </Text>
+          <Text style={styles.legendaItem}>🟡 AMARELO = 80 ~ 100 → Moderado</Text>
           <Text style={styles.legendaItem}>🟣 ROXO = 100 ~ 120 → Alerta</Text>
           <Text style={styles.legendaItem}>🔴 VERMELHO = 120 ~ → Grave</Text>
         </View>
